@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.docprocess.controller.DocController">
+    <children>
+        <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #D4DBE2; -fx-border-color: grey;">
+            <children>
+                <Button fx:id="openBtn" layoutX="14.0" layoutY="203.0" mnemonicParsing="false" onAction="#openJsonFile" prefHeight="25.0" prefWidth="171.0" text="Выбрать файл" />
+                <Button fx:id="loadBtn" disable="true" layoutX="14.0" layoutY="241.0" mnemonicParsing="false" onAction="#loadJsonFile" prefHeight="25.0" prefWidth="171.0" text="Загрузить файл" />
+                <Button fx:id="exitBtn" layoutX="14.0" layoutY="553.0" mnemonicParsing="false" onAction="#exitProgram" prefHeight="25.0" prefWidth="171.0" text="Выход" />
+                <ImageView fitHeight="115.0" fitWidth="171.0" layoutX="14.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@icon.jpg" />
+                    </image>
+                </ImageView>
+                <Pane layoutY="165.0" prefHeight="6.0" prefWidth="199.0" style="-fx-border-color: grey;" />
+                <Label layoutX="56.0" layoutY="133.0" text="DOC Holding">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+        <AnchorPane layoutX="199.0" prefHeight="50.0" prefWidth="700.0" style="-fx-background-color: grey;">
+            <children>
+                <Label layoutX="14.0" layoutY="11.0" prefHeight="34.0" prefWidth="435.0" text="Процесс согласования документов" textFill="WHITE">
+                    <font>
+                        <Font name="Arial Black" size="14.0" />
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+      <Label fx:id="openLabel" layoutX="293.0" layoutY="94.0" text="Ожидается открытие Json-файла">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <ImageView fx:id="openImage" fitHeight="50.0" fitWidth="50.0" layoutX="230.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+          <image>
+              <Image url="@error.png" />
+          </image>
+      </ImageView>
+      <ImageView fx:id="loadImage" fitHeight="50.0" fitWidth="50.0" layoutX="607.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+          <image>
+              <Image url="@error.png" />
+          </image>
+      </ImageView>
+      <Label fx:id="loadLabel" layoutX="673.0" layoutY="94.0" text="Json-файл не обработан">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="textAreaIn" layoutX="236.0" layoutY="211.0" prefHeight="350.0" prefWidth="250.0" />
+      <TextArea fx:id="textAreaOut" layoutX="580.0" layoutY="211.0" prefHeight="350.0" prefWidth="250.0" />
+      <Label layoutX="317.0" layoutY="161.0" text="Input Json">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="673.0" layoutY="161.0" text="Output Json">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>
