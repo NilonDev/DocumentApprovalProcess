@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="507.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.docprocess.controller.VoteDialogController">
+   <children>
+      <Button fx:id="trueVoteBtn" layoutX="60.0" layoutY="241.0" mnemonicParsing="false" onAction="#trueBtn" prefHeight="30.0" prefWidth="130.0" text="TRUE" />
+      <Button fx:id="falseVoteBtn" layoutX="299.0" layoutY="241.0" mnemonicParsing="false" onAction="#falseBtn" prefHeight="30.0" prefWidth="130.0" text="FALSE" />
+      <Label fx:id="userName" layoutX="88.0" layoutY="104.0" prefHeight="27.0" prefWidth="75.0" text="name">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Label>
+      <Label layoutX="85.0" layoutY="182.0" text="Подтвердите или отклоните документ">
+         <font>
+            <Font name="Consolas" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="25.0" layoutY="104.0" text="Name:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Pane prefHeight="87.0" prefWidth="507.0" style="-fx-background-color: #D4DBE2;">
+         <children>
+            <ImageView fitHeight="68.0" fitWidth="66.0" layoutX="427.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@stamp.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="172.0" layoutY="31.0" text="Проведение документа">
+               <font>
+                  <Font name="System Italic" size="18.0" />
+               </font></Label>
+            <Pane layoutX="14.0" layoutY="11.0" prefHeight="39.0" prefWidth="130.0" style="-fx-background-color: white; -fx-background-radius: 10px;">
+               <children>
+                  <Label layoutX="7.0" layoutY="8.0" text="Step:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="stepNumber" layoutX="50.0" layoutY="8.0" prefHeight="22.0" prefWidth="66.0" style="-fx-background-radius: 5px;" text="number" textAlignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </children></Pane>
+   </children>
+</AnchorPane>

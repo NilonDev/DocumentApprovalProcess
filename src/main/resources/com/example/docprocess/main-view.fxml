@@ -10,7 +10,7 @@
         <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #D4DBE2; -fx-border-color: grey;">
             <children>
                 <Button fx:id="openBtn" layoutX="14.0" layoutY="203.0" mnemonicParsing="false" onAction="#openJsonFile" prefHeight="25.0" prefWidth="171.0" text="Выбрать файл" />
-                <Button fx:id="loadBtn" disable="true" layoutX="14.0" layoutY="241.0" mnemonicParsing="false" onAction="#loadJsonFile" prefHeight="25.0" prefWidth="171.0" text="Загрузить файл" />
+                <Button fx:id="loadBtn" disable="true" layoutX="14.0" layoutY="241.0" mnemonicParsing="false" onAction="#loadJsonFile" prefHeight="25.0" prefWidth="171.0" text="Обработать файл" />
                 <Button fx:id="exitBtn" layoutX="14.0" layoutY="553.0" mnemonicParsing="false" onAction="#exitProgram" prefHeight="25.0" prefWidth="171.0" text="Выход" />
                 <ImageView fitHeight="115.0" fitWidth="171.0" layoutX="14.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
                     <image>

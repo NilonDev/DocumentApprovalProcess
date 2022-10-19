@@ -12,7 +12,7 @@ import java.util.Map;
 public class LevelAgreement {
     private int step;
     private String operation;
-    private Map<String, String> userVoting;
+    private String[] users;
 
     public int getStep() {
         return step;
@@ -20,8 +20,9 @@ public class LevelAgreement {
     public String getOperation() {
         return operation;
     }
-    public Map<String, String> getUserVoting() {
-        return userVoting;
+
+    public String[] getUsers() {
+        return users;
     }
 
     public void setStep(int step) {
@@ -32,7 +33,7 @@ public class LevelAgreement {
         this.operation = operation;
     }
 
-    public void setUserVoting(Map<String, String> userVoting) {
-        this.userVoting = userVoting;
+    public void setUsers(String[] users) {
+        this.users = users;
     }
 }

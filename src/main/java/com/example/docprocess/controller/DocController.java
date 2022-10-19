@@ -1,24 +1,28 @@
 package com.example.docprocess.controller;
 
+import com.example.docprocess.MainApplication;
 import com.example.docprocess.logic.AppEngine;
+import com.example.docprocess.model.LevelAgreement;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
-public class DocController {
+public class DocController implements VoteDialogController.Callback {
     private AppEngine appEngine = new AppEngine();
     @FXML
     private Button openBtn;
@@ -41,7 +45,6 @@ public class DocController {
     @FXML
     private TextArea textAreaOut;
 
-
     @FXML
     protected void openJsonFile() throws IOException {
         FileChooser fileChooser = new FileChooser();        // для работы с проводником
@@ -59,6 +62,8 @@ public class DocController {
         } else {
             openError();
         }
+
+        nextVote();
     }
 
     @FXML
@@ -73,7 +78,7 @@ public class DocController {
         File selectedFile = fileChooser.showSaveDialog(new Stage());
 
         if (selectedFile != null) {
-            appEngine.holdDocument();
+            //appEngine.holdDocument();
             appEngine.jsonSave(selectedFile.getAbsolutePath());
             loadSuccess();
         } else {
@@ -147,5 +152,79 @@ public class DocController {
         loadBtn.setDisable(false);
         setErrorImg(loadImage);
         textAreaOut.clear();
+    }
+
+    /**
+     * Для работы с VoteDialog
+     */
+
+    private int countForm = 0;
+    private int currentStep = 1;
+
+    private Map<String, String> userVoteResult = new HashMap<>();
+
+    protected void countFormDecrement() {
+        countForm--;
+    }
+
+    /**
+     *
+     * Создание окна согласования
+     */
+
+    @FXML
+    protected void createVoteDialog(String step, String userName) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("user-vote-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("User Voting");
+        stage.setScene(scene);
+        stage.show();
+
+        VoteDialogController dialogController = (VoteDialogController) fxmlLoader.getController();
+        dialogController.registerCallBack(this);
+        dialogController.stepNumber.setText(step);
+        dialogController.userName.setText(userName);
+
+        countForm++;
+    }
+
+    /**
+     *
+     * Создание всех окон на шаге согласование
+     */
+
+    @FXML
+    protected void nextVote() throws IOException {
+        LevelAgreement level;
+        if (countForm == 0 || currentStep == 1) {
+
+            try {
+                level = appEngine.getDocument().getLevelsAgreement()[currentStep];
+            } catch (IndexOutOfBoundsException e) {
+                return;
+            }
+
+            for (int k = 0; k < level.getUsers().length; k++) {
+                createVoteDialog(String.valueOf(level.getStep()), level.getUsers()[k]);
+            }
+            currentStep++;
+        }
+    }
+
+    /**
+     *
+     * Получение результата голсования и продвижение на следующий шаг
+     */
+
+    @Override
+    public void callBackUserVote(String userName, String userVote) {
+        countFormDecrement();
+        userVoteResult.put(userName, userVote);
+        try {
+            nextVote();
+        } catch (IOException e) {
+            e.getMessage();
+        }
     }
 }

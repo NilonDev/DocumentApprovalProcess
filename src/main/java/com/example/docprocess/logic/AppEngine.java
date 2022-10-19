@@ -15,6 +15,10 @@ public class AppEngine {
     private DocumentApprovalProcess document;
     private JsonElement documentTree;
 
+    public DocumentApprovalProcess getDocument() {
+        return document;
+    }
+
     public String getStartJson () {
         return gson.toJson(document);
     }
@@ -47,6 +51,7 @@ public class AppEngine {
         writer.close();
     }
 
+    /*
     public void holdDocument() throws IOException {
         int stepCount;
         String levelResult;
@@ -63,7 +68,7 @@ public class AppEngine {
             JsonElement levelJSON = levelsJSON.get(i).getAsJsonObject();
             LevelAgreement level = gson.fromJson(levelJSON, LevelAgreement.class);
 
-            levelResult = stepResult(level.getOperation(), level.getUserVoting());
+            levelResult = stepResult(level.getOperation(), level.getUsers());
 
             docTree.getAsJsonObject()
                     .getAsJsonArray("levelsAgreement")
@@ -152,4 +157,6 @@ public class AppEngine {
         }
         return Constant.CONFIRM;
     }
+
+     */
 }
