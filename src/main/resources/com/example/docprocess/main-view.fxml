@@ -9,8 +9,8 @@
     <children>
         <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #D4DBE2; -fx-border-color: grey;">
             <children>
-                <Button fx:id="openBtn" layoutX="14.0" layoutY="203.0" mnemonicParsing="false" onAction="#openJsonFile" prefHeight="25.0" prefWidth="171.0" text="Выбрать файл" />
-                <Button fx:id="loadBtn" disable="true" layoutX="14.0" layoutY="241.0" mnemonicParsing="false" onAction="#loadJsonFile" prefHeight="25.0" prefWidth="171.0" text="Обработать файл" />
+                <Button fx:id="openBtn" layoutX="14.0" layoutY="203.0" mnemonicParsing="false" onAction="#openJsonFile" prefHeight="30.0" prefWidth="170.0" text="Выбрать файл" />
+                <Button fx:id="loadBtn" disable="true" layoutX="15.0" layoutY="244.0" mnemonicParsing="false" onAction="#loadJsonFile" prefHeight="30.0" prefWidth="170.0" text="Обработать файл" />
                 <Button fx:id="exitBtn" layoutX="14.0" layoutY="553.0" mnemonicParsing="false" onAction="#exitProgram" prefHeight="25.0" prefWidth="171.0" text="Выход" />
                 <ImageView fitHeight="115.0" fitWidth="171.0" layoutX="14.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
                     <image>
@@ -23,6 +23,7 @@
                         <Font name="System Bold" size="14.0" />
                     </font>
                 </Label>
+            <Button disable="true" layoutX="14.0" layoutY="288.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="170.0" text="Сохранить файл" />
             </children>
         </Pane>
         <AnchorPane layoutX="199.0" prefHeight="50.0" prefWidth="700.0" style="-fx-background-color: grey;">
@@ -53,8 +54,8 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <TextArea fx:id="textAreaIn" layoutX="236.0" layoutY="211.0" prefHeight="350.0" prefWidth="250.0" />
-      <TextArea fx:id="textAreaOut" layoutX="580.0" layoutY="211.0" prefHeight="350.0" prefWidth="250.0" />
+      <TextArea fx:id="textAreaIn" editable="false" layoutX="236.0" layoutY="211.0" prefHeight="350.0" prefWidth="250.0" />
+      <TextArea fx:id="textAreaOut" editable="false" layoutX="580.0" layoutY="211.0" prefHeight="350.0" prefWidth="250.0" />
       <Label layoutX="317.0" layoutY="161.0" text="Input Json">
          <font>
             <Font name="System Bold" size="18.0" />

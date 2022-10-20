@@ -1,6 +1,7 @@
 package com.example.docprocess.controller;
 
 import com.example.docprocess.MainApplication;
+import com.example.docprocess.constrant.Constant;
 import com.example.docprocess.logic.AppEngine;
 import com.example.docprocess.model.LevelAgreement;
 import javafx.application.Platform;
@@ -47,6 +48,7 @@ public class DocController implements VoteDialogController.Callback {
 
     @FXML
     protected void openJsonFile() throws IOException {
+        removeTempData();
         FileChooser fileChooser = new FileChooser();        // для работы с проводником
         fileChooser.setTitle("Выбрать Json файл");
         fileChooser.getExtensionFilters().add(
@@ -62,7 +64,6 @@ public class DocController implements VoteDialogController.Callback {
         } else {
             openError();
         }
-
         nextVote();
     }
 
@@ -78,7 +79,7 @@ public class DocController implements VoteDialogController.Callback {
         File selectedFile = fileChooser.showSaveDialog(new Stage());
 
         if (selectedFile != null) {
-            //appEngine.holdDocument();
+            appEngine.processingDocument(userVoteResult);
             appEngine.jsonSave(selectedFile.getAbsolutePath());
             loadSuccess();
         } else {
@@ -155,21 +156,35 @@ public class DocController implements VoteDialogController.Callback {
     }
 
     /**
-     * Для работы с VoteDialog
+     * Поля и методы для работы с окном голосования (user-vote-view)
+     * countForm = количество отображаемых окон голосования
+     * currentStep = текущий шаг голосования
+     * userVoteResult = коллекция, которая хранит результаты голосования по типу:
+     * (имя пользователя : true / false)
      */
 
     private int countForm = 0;
-    private int currentStep = 1;
-
+    private int currentStep = 0;
     private Map<String, String> userVoteResult = new HashMap<>();
+
+    public Map<String, String> getUserVoteResult() {
+        return userVoteResult;
+    }
+
+    private void removeTempData() {
+        countForm = 0;
+        currentStep = 0;
+        userVoteResult.clear();
+    }
 
     protected void countFormDecrement() {
         countForm--;
     }
 
     /**
-     *
-     * Создание окна согласования
+     * createVoteDialog() - Создание окна согласования
+     * @param step = текуший шаг, на котором проходит согласование
+     * @param userName = имя голосующего пользователя
      */
 
     @FXML
@@ -177,12 +192,15 @@ public class DocController implements VoteDialogController.Callback {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("user-vote-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
-        stage.setTitle("User Voting");
+        stage.setTitle("Согласование");
         stage.setScene(scene);
         stage.show();
 
         VoteDialogController dialogController = (VoteDialogController) fxmlLoader.getController();
         dialogController.registerCallBack(this);
+
+        if (step.equals("1")) dialogController.dialogTextVote.setText("Начать проведение документа?");
+
         dialogController.stepNumber.setText(step);
         dialogController.userName.setText(userName);
 
@@ -190,21 +208,15 @@ public class DocController implements VoteDialogController.Callback {
     }
 
     /**
-     *
-     * Создание всех окон на шаге согласование
+     * nextVote() - создание всех окон голосования на шаге согласование
      */
 
     @FXML
     protected void nextVote() throws IOException {
-        LevelAgreement level;
-        if (countForm == 0 || currentStep == 1) {
+        int maxStep = appEngine.getDocumentInput().getLevelsAgreement().length;
 
-            try {
-                level = appEngine.getDocument().getLevelsAgreement()[currentStep];
-            } catch (IndexOutOfBoundsException e) {
-                return;
-            }
-
+        if (countForm == 0 && currentStep < maxStep) {
+            LevelAgreement level = appEngine.getDocumentInput().getLevelsAgreement()[currentStep];
             for (int k = 0; k < level.getUsers().length; k++) {
                 createVoteDialog(String.valueOf(level.getStep()), level.getUsers()[k]);
             }
@@ -213,18 +225,19 @@ public class DocController implements VoteDialogController.Callback {
     }
 
     /**
-     *
-     * Получение результата голсования и продвижение на следующий шаг
+     * callBackUserVote - коллбэк, который вызывается, когда пользователь голосует
+     * "@param userName = Имя пользователя
+     * "@param userVote = Голос пользователя
      */
-
     @Override
-    public void callBackUserVote(String userName, String userVote) {
-        countFormDecrement();
-        userVoteResult.put(userName, userVote);
-        try {
-            nextVote();
-        } catch (IOException e) {
-            e.getMessage();
+    public void callBackUserVote(String step, String userName, String userVote) throws IOException {
+        if (step.equals("1") && userVote.equals(Constant.FALSE_VOTE)) {     // если отменить обработку
+            removeTempData();
+            return;
         }
+
+        countFormDecrement();                       // счетчик форм -1
+        userVoteResult.put(userName, userVote);     // добавление результата в коллекцию
+        nextVote();                                  // переход к следующему шагу согласования
     }
 }

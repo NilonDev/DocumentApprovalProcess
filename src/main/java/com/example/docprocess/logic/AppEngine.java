@@ -2,34 +2,23 @@ package com.example.docprocess.logic;
 
 import com.example.docprocess.constrant.Constant;
 import com.example.docprocess.model.DocumentApprovalProcess;
+import com.example.docprocess.model.DocumentApprovalProcessResult;
 import com.example.docprocess.model.LevelAgreement;
+import com.example.docprocess.model.LevelAgreementResult;
 import com.google.gson.*;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AppEngine {
     private Gson gson;
-    private DocumentApprovalProcess document;
-    private JsonElement documentTree;
-
-    public DocumentApprovalProcess getDocument() {
-        return document;
-    }
-
-    public String getStartJson () {
-        return gson.toJson(document);
-    }
-
-    public String getEndJson () {
-        return gson.toJson(documentTree);
-    }
-
-    public JsonElement getDocumentTree() {
-        return documentTree;
-    }
+    private DocumentApprovalProcess documentInput;
+    private DocumentApprovalProcessResult documentOutput;
 
     public AppEngine() {
         gson = new GsonBuilder()
@@ -37,126 +26,131 @@ public class AppEngine {
                 .create();
     }
 
+    public DocumentApprovalProcess getDocumentInput() {
+        return documentInput;
+    }
+
+    public String getStartJson() {
+        return gson.toJson(documentInput);
+    }
+
+    public String getEndJson() {
+        return gson.toJson(documentOutput);
+    }
+
+
     public void jsonRead(String pathIn) throws IOException {
         FileReader reader = new FileReader(pathIn);
-        document = gson.fromJson(reader, DocumentApprovalProcess.class);
+        documentInput = gson.fromJson(reader, DocumentApprovalProcess.class);
         reader.close();
-        //System.out.println(document.idDocument);
     }
 
     public void jsonSave(String pathOut) throws IOException {
         FileWriter writer = new FileWriter(pathOut);
-        gson.toJson(documentTree, writer);
+        gson.toJson(documentOutput, writer);
         writer.flush();
         writer.close();
     }
 
-    /*
-    public void holdDocument() throws IOException {
-        int stepCount;
-        String levelResult;
 
-        JsonElement docTree = gson.toJsonTree(document);        // весь json-объект
+    public void processingDocument(Map<String, String> voteResult) throws IOException {
+        /*
+        JsonElement docTree = gson.toJsonTree(documentInput);                         // весь json-объект
 
-        JsonArray levelsJSON = docTree.getAsJsonObject()            // массив уровеней провдения документа
+        JsonArray levelsJSON = docTree.getAsJsonObject()                              // массив уровеней проведения документа
                 .getAsJsonArray("levelsAgreement");
 
-        stepCount = levelsJSON.size();
+         */
 
-        for (int i = 0; i < stepCount; i++) {
+        LevelAgreement[] listLevel = documentInput.getLevelsAgreement();
+        int stepLength = listLevel.length;
 
-            JsonElement levelJSON = levelsJSON.get(i).getAsJsonObject();
-            LevelAgreement level = gson.fromJson(levelJSON, LevelAgreement.class);
+        List<LevelAgreementResult> listOfLevelsResult = new ArrayList<>();
 
-            levelResult = stepResult(level.getOperation(), level.getUsers());
-
-            docTree.getAsJsonObject()
-                    .getAsJsonArray("levelsAgreement")
-                    .get(i)
-                    .getAsJsonObject()
-                    .addProperty("levelResult", levelResult);
+        for (int i = 0; i < stepLength; i++) {
+            LevelAgreement currentStep = listLevel[i];
+            LevelAgreementResult tempResult = new LevelAgreementResult();
+            tempResult.setStep(currentStep.getStep());
+            tempResult.setOperation(currentStep.getOperation());
+            tempResult.setUsersVote(createUserWithVote(currentStep, voteResult));
+            listOfLevelsResult.add(tempResult);
         }
 
-        String finalResult = finalResult(docTree);
-        docTree.getAsJsonObject().addProperty("finalResult", finalResult);
-
-        // добавление последнего шага
-        JsonElement mainUser = docTree.getAsJsonObject()
-                .getAsJsonArray("levelsAgreement")
-                .get(0)
-                .getAsJsonObject()
-                .deepCopy();
-
-        mainUser.getAsJsonObject()
-                .addProperty("step", stepCount + 1);
-        mainUser.getAsJsonObject()
-                .addProperty("levelResult", finalResult);
-
-        docTree.getAsJsonObject()
-                .getAsJsonArray("levelsAgreement")
-                .add(mainUser);
-
-        ////////////////////////////////////////
-
-        documentTree = docTree;
-        // вывод JSON в консоль
-        //System.out.println(gson.toJson(documentTree));
+        documentOutput = new DocumentApprovalProcessResult();
+        documentOutput.setIdDocument(documentInput.getIdDocument());
+        documentOutput.setLevelsAgreement(processingStepByStep(listOfLevelsResult));
+        //System.out.println(gson.toJson(documentOutput));
     }
 
-    public String stepResult(final String operation, Map<String, String> usersVoting) {
-        boolean currentResult;
 
-        if (operation.equals("or") || operation.equals("-"))
-            currentResult = false;
-        else if (operation.equals("and")) {
-            currentResult = true;
-        } else {
-            currentResult = false;
+    public Map<String, String> createUserWithVote(LevelAgreement level, Map<String, String> voteResult) {
+        Map<String, String> userWithVote = new HashMap<String, String>();
+
+        for (int i = 0; i < level.getUsers().length; i++) {
+            String userName = level.getUsers()[i];
+            userWithVote.put(userName, voteResult.get(userName));
         }
+        return userWithVote;
+    }
 
-        for (Map.Entry<String, String> user : usersVoting.entrySet()) {
-            switch (operation) {
-                case "or":
-                case "-":
-                    if (user.getValue().equals(Constant.CONFIRM)) {
-                        currentResult = currentResult | true;
-                    } else if (user.getValue().equals(Constant.REJECT)) {
-                        currentResult = currentResult | false;
+    public List<LevelAgreementResult> processingStepByStep(List<LevelAgreementResult> voteList) {
+        boolean currentResult;
+        boolean finalResult = true;
+
+        for (int i = 0; i < voteList.size(); i++) {
+            LevelAgreementResult currentLVL = voteList.get(i);
+            String operation = currentLVL.getOperation();
+
+            if (operation.equals(Constant.OR_OPERATION) || operation.equals(Constant.MISSING_OPERATION))
+                currentResult = false;
+            else if (operation.equals(Constant.AND_OPERATION)) {
+                currentResult = true;
+            } else {
+                currentResult = false;
+            }
+
+            for (Map.Entry<String, String> user : currentLVL.getUsersVote().entrySet()) {
+                switch (operation) {
+                    case Constant.OR_OPERATION:
+                    case Constant.MISSING_OPERATION:
+                    case Constant.START_OPERATION:
+                        if (user.getValue().equals(Constant.TRUE_VOTE)) {
+                            currentResult = currentResult | true;
+                        } else if (user.getValue().equals(Constant.FALSE_VOTE)) {
+                            currentResult = currentResult | false;
+                        }
+                        break;
+                    case Constant.AND_OPERATION: {
+                        if (user.getValue().equals(Constant.TRUE_VOTE)) {
+                            currentResult = currentResult & true;
+                        } else if (user.getValue().equals(Constant.FALSE_VOTE)) {
+                            currentResult = currentResult & false;
+                        }
+                        break;
                     }
-                    break;
-                case "and": {
-                    if (user.getValue().equals(Constant.CONFIRM)) {
-                        currentResult = currentResult & true;
-                    } else if (user.getValue().equals(Constant.REJECT)) {
-                        currentResult = currentResult & false;
-                    }
-                    break;
                 }
             }
+
+            if (currentResult)
+                currentLVL.setVoteResult(Constant.TRUE_VOTE);
+            else {
+                currentLVL.setVoteResult(Constant.FALSE_VOTE);
+                finalResult = false;
+            }
         }
-        if (currentResult)
-            return Constant.CONFIRM;
-        else
-            return Constant.REJECT;
-    }
 
-    public String finalResult(JsonElement documentTree) {
-        JsonArray levels = documentTree.getAsJsonObject().getAsJsonArray("levelsAgreement");
-        int stepCount = levels.size();
+        LevelAgreementResult finalLEVEL = new LevelAgreementResult();
+        finalLEVEL.setStep(voteList.size() + 1);
+        finalLEVEL.setOperation(Constant.FINISH_OPERATION);
+        finalLEVEL.setUsersVote(voteList.get(0).getUsersVote());
 
-        for (int i = 0; i < stepCount; i++) {
-            String levelResult = levels.get(i).
-                    getAsJsonObject().
-                    get("levelResult")
-                    .toString();
-
-            levelResult = levelResult.replace("\"", "");
-
-            if (levelResult.equals(Constant.REJECT))
-                return Constant.REJECT;
+        if (finalResult) {
+            finalLEVEL.setVoteResult(Constant.TRUE_VOTE);
+        } else {
+            finalLEVEL.setVoteResult(Constant.FALSE_VOTE);
         }
-        return Constant.CONFIRM;
-    }
 
-     */
+        voteList.add(finalLEVEL);
+        return voteList;
+    }
 }
