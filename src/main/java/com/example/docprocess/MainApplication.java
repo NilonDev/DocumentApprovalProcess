@@ -17,7 +17,7 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
         fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Document Process");
+        stage.setTitle("Document Agreement");
         stage.setScene(scene);
         stage.show();
     }

@@ -8,8 +8,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import static com.example.docprocess.constrant.Constant.TRUE_VOTE;
-
 public class VoteDialogController {
 
     interface Callback{
@@ -38,7 +36,6 @@ public class VoteDialogController {
         stage.close();
         callback.callBackUserVote(stepNumber.getText(), userName.getText(), Constant.TRUE_VOTE);
     }
-
     @FXML
     protected void falseBtn() throws IOException {
         Stage stage = (Stage) falseVoteBtn.getScene().getWindow();

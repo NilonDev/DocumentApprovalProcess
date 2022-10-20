@@ -9,21 +9,30 @@
     <children>
         <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #D4DBE2; -fx-border-color: grey;">
             <children>
-                <Button fx:id="openBtn" layoutX="14.0" layoutY="203.0" mnemonicParsing="false" onAction="#openJsonFile" prefHeight="30.0" prefWidth="170.0" text="Выбрать файл" />
-                <Button fx:id="processingBtn" disable="true" layoutX="15.0" layoutY="244.0" mnemonicParsing="false" onAction="#processingJsonFile" prefHeight="30.0" prefWidth="170.0" text="Обработать файл" />
-                <Button fx:id="saveBtn" disable="true" onAction="#saveJsonFile" layoutX="14.0" layoutY="288.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="170.0" text="Сохранить файл" />
+                <Button fx:id="openBtn" layoutX="14.0" layoutY="230.0" mnemonicParsing="false" onAction="#openJsonFile" prefHeight="30.0" prefWidth="170.0" text="Загрузить файл" />
+                <Button fx:id="processingBtn" disable="true" layoutX="15.0" layoutY="278.0" mnemonicParsing="false" onAction="#processingJsonFile" prefHeight="30.0" prefWidth="170.0" text="Обработать файл" />
+                <Button fx:id="saveBtn" disable="true" layoutX="15.0" layoutY="322.0" mnemonicParsing="false" onAction="#saveJsonFile" prefHeight="30.0" prefWidth="170.0" text="Сохранить файл" />
                 <Button fx:id="exitBtn" layoutX="14.0" layoutY="553.0" mnemonicParsing="false" onAction="#exitProgram" prefHeight="25.0" prefWidth="171.0" text="Выход" />
-                <ImageView fitHeight="115.0" fitWidth="171.0" layoutX="14.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="115.0" fitWidth="171.0" layoutX="15.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@icon.jpg" />
                     </image>
                 </ImageView>
-                <Pane layoutY="165.0" prefHeight="6.0" prefWidth="199.0" style="-fx-border-color: grey;" />
-                <Label layoutX="56.0" layoutY="133.0" text="DOC Holding">
+                <Pane layoutX="1.0" layoutY="205.0" prefHeight="6.0" prefWidth="199.0" style="-fx-border-color: grey;" />
+                <Label layoutX="45.0" layoutY="164.0" text="DOC Аgreement">
                     <font>
                         <Font name="System Bold" size="14.0" />
                     </font>
                 </Label>
+            <MenuBar layoutX="-1.0" layoutY="-1.0" prefHeight="26.0" prefWidth="900.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem fx:id="aboutProgram" onAction="#createAboutForm" mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
             </children>
         </Pane>
         <AnchorPane layoutX="199.0" prefHeight="50.0" prefWidth="700.0" style="-fx-background-color: grey;">

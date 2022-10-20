@@ -61,7 +61,6 @@ public class AppEngine {
                 .getAsJsonArray("levelsAgreement");
 
          */
-
         LevelAgreementIn[] listLevel = documentInput.getLevelsAgreement();
         int stepLength = listLevel.length;
 
