@@ -1,10 +1,10 @@
 package com.example.docprocess.logic;
 
 import com.example.docprocess.constrant.Constant;
-import com.example.docprocess.model.DocumentApprovalProcess;
-import com.example.docprocess.model.DocumentApprovalProcessResult;
-import com.example.docprocess.model.LevelAgreement;
-import com.example.docprocess.model.LevelAgreementResult;
+import com.example.docprocess.model.DocumentApprovalIn;
+import com.example.docprocess.model.DocumentApprovalOut;
+import com.example.docprocess.model.LevelAgreementIn;
+import com.example.docprocess.model.LevelAgreementOut;
 import com.google.gson.*;
 
 import java.io.FileReader;
@@ -17,8 +17,8 @@ import java.util.Map;
 
 public class AppEngine {
     private Gson gson;
-    private DocumentApprovalProcess documentInput;
-    private DocumentApprovalProcessResult documentOutput;
+    private DocumentApprovalIn documentInput;
+    private DocumentApprovalOut documentOutput;
 
     public AppEngine() {
         gson = new GsonBuilder()
@@ -26,7 +26,7 @@ public class AppEngine {
                 .create();
     }
 
-    public DocumentApprovalProcess getDocumentInput() {
+    public DocumentApprovalIn getDocumentInput() {
         return documentInput;
     }
 
@@ -41,7 +41,7 @@ public class AppEngine {
 
     public void jsonRead(String pathIn) throws IOException {
         FileReader reader = new FileReader(pathIn);
-        documentInput = gson.fromJson(reader, DocumentApprovalProcess.class);
+        documentInput = gson.fromJson(reader, DocumentApprovalIn.class);
         reader.close();
     }
 
@@ -62,28 +62,28 @@ public class AppEngine {
 
          */
 
-        LevelAgreement[] listLevel = documentInput.getLevelsAgreement();
+        LevelAgreementIn[] listLevel = documentInput.getLevelsAgreement();
         int stepLength = listLevel.length;
 
-        List<LevelAgreementResult> listOfLevelsResult = new ArrayList<>();
+        List<LevelAgreementOut> listOfLevelsResult = new ArrayList<>();
 
         for (int i = 0; i < stepLength; i++) {
-            LevelAgreement currentStep = listLevel[i];
-            LevelAgreementResult tempResult = new LevelAgreementResult();
+            LevelAgreementIn currentStep = listLevel[i];
+            LevelAgreementOut tempResult = new LevelAgreementOut();
             tempResult.setStep(currentStep.getStep());
             tempResult.setOperation(currentStep.getOperation());
             tempResult.setUsersVote(createUserWithVote(currentStep, voteResult));
             listOfLevelsResult.add(tempResult);
         }
 
-        documentOutput = new DocumentApprovalProcessResult();
+        documentOutput = new DocumentApprovalOut();
         documentOutput.setIdDocument(documentInput.getIdDocument());
         documentOutput.setLevelsAgreement(processingStepByStep(listOfLevelsResult));
         //System.out.println(gson.toJson(documentOutput));
     }
 
 
-    public Map<String, String> createUserWithVote(LevelAgreement level, Map<String, String> voteResult) {
+    public Map<String, String> createUserWithVote(LevelAgreementIn level, Map<String, String> voteResult) {
         Map<String, String> userWithVote = new HashMap<String, String>();
 
         for (int i = 0; i < level.getUsers().length; i++) {
@@ -93,12 +93,12 @@ public class AppEngine {
         return userWithVote;
     }
 
-    public List<LevelAgreementResult> processingStepByStep(List<LevelAgreementResult> voteList) {
+    public List<LevelAgreementOut> processingStepByStep(List<LevelAgreementOut> voteList) {
         boolean currentResult;
         boolean finalResult = true;
 
         for (int i = 0; i < voteList.size(); i++) {
-            LevelAgreementResult currentLVL = voteList.get(i);
+            LevelAgreementOut currentLVL = voteList.get(i);
             String operation = currentLVL.getOperation();
 
             if (operation.equals(Constant.OR_OPERATION) || operation.equals(Constant.MISSING_OPERATION))
@@ -139,7 +139,7 @@ public class AppEngine {
             }
         }
 
-        LevelAgreementResult finalLEVEL = new LevelAgreementResult();
+        LevelAgreementOut finalLEVEL = new LevelAgreementOut();
         finalLEVEL.setStep(voteList.size() + 1);
         finalLEVEL.setOperation(Constant.FINISH_OPERATION);
         finalLEVEL.setUsersVote(voteList.get(0).getUsersVote());

@@ -1,25 +1,29 @@
 package com.example.docprocess.model;
 
+import java.util.ArrayList;
+
 /**
  * DocumentApprovalProcess - процесс согласования документа
  * idDocument - идентификатор документа
  * LevelAgreement[] - уровни проведения документа
  */
 
-public class DocumentApprovalProcess {
+public class DocumentApprovalIn {
     private int idDocument;
-    private LevelAgreement[] levelsAgreement;
+    private LevelAgreementIn[] levelsAgreement;
 
     public int getIdDocument() {
         return idDocument;
     }
-    public LevelAgreement[] getLevelsAgreement() {
+
+    public LevelAgreementIn[] getLevelsAgreement() {
         return levelsAgreement;
     }
+
     public void setIdDocument(int idDocument) {
         this.idDocument = idDocument;
     }
-    public void setLevelsAgreement(LevelAgreement[] levelsAgreement) {
+    public void setLevelsAgreement(LevelAgreementIn[] levelsAgreement) {
         this.levelsAgreement = levelsAgreement;
     }
 }

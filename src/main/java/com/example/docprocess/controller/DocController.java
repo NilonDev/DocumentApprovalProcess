@@ -3,7 +3,7 @@ package com.example.docprocess.controller;
 import com.example.docprocess.MainApplication;
 import com.example.docprocess.constrant.Constant;
 import com.example.docprocess.logic.AppEngine;
-import com.example.docprocess.model.LevelAgreement;
+import com.example.docprocess.model.LevelAgreementIn;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,13 +26,9 @@ import java.util.Map;
 public class DocController implements VoteDialogController.Callback {
     private AppEngine appEngine = new AppEngine();
     @FXML
-    private Button openBtn;
+    public Button processingBtn;
     @FXML
-    private Button loadBtn;
-    @FXML
-    private Button exitBtn;
-    @FXML
-    private TextField pathFileIn;
+    public Button saveBtn;
     @FXML
     private ImageView openImage;
     @FXML
@@ -60,13 +56,38 @@ public class DocController implements VoteDialogController.Callback {
         if (selectedFile != null) {
             appEngine.jsonRead(selectedFile.getAbsolutePath());
             openSuccess();
-
         } else {
             openError();
         }
         nextVote();
     }
 
+    @FXML
+    protected void processingJsonFile() throws IOException {
+        appEngine.processingDocument(userVoteResult);
+        loadSuccess();
+    }
+
+    @FXML
+    protected void saveJsonFile() throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Сохранить результаты в Json");
+
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("json", "*.json")
+        );
+
+        File selectedFile = fileChooser.showSaveDialog(new Stage());
+
+        if (selectedFile != null) {
+            appEngine.jsonSave(selectedFile.getAbsolutePath());
+            loadSuccess();
+        } else {
+            loadError();
+        }
+    }
+
+    /*
     @FXML
     protected void loadJsonFile() throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -86,6 +107,8 @@ public class DocController implements VoteDialogController.Callback {
             loadError();
         }
     }
+
+     */
 
     @FXML
     protected void exitProgram() {
@@ -118,19 +141,20 @@ public class DocController implements VoteDialogController.Callback {
     protected void openSuccess() throws IOException {
         openLabel.setText("Файл выбран!");
         setSuccessImg(openImage);
-        loadBtn.setDisable(false);
+        processingBtn.setDisable(false);
         setTextJson(textAreaIn, appEngine.getStartJson());
 
         loadLabel.setText("Json-файл не обработан");
-        loadBtn.setDisable(false);
+        processingBtn.setDisable(false);
         setErrorImg(loadImage);
         textAreaOut.clear();
     }
 
     @FXML
     protected void loadSuccess() throws IOException {
-        loadLabel.setText("Файл обработан и сохранен!");
-        loadBtn.setDisable(false);
+        loadLabel.setText("Файл обработан!");
+        processingBtn.setDisable(false);
+        saveBtn.setDisable(false);
         setSuccessImg(loadImage);
         setTextJson(textAreaOut, appEngine.getEndJson());
     }
@@ -139,7 +163,8 @@ public class DocController implements VoteDialogController.Callback {
     protected void openError() throws IOException {
         openLabel.setText("Ожидается открытие Json-файла");
         setErrorImg(openImage);
-        loadBtn.setDisable(true);
+        processingBtn.setDisable(true);
+        saveBtn.setDisable(true);
         textAreaIn.clear();
 
         loadLabel.setText("Json-файл не обработан");
@@ -150,7 +175,7 @@ public class DocController implements VoteDialogController.Callback {
     @FXML
     protected void loadError() throws IOException {
         loadLabel.setText("Json-файл не обработан");
-        loadBtn.setDisable(false);
+        processingBtn.setDisable(false);
         setErrorImg(loadImage);
         textAreaOut.clear();
     }
@@ -216,7 +241,7 @@ public class DocController implements VoteDialogController.Callback {
         int maxStep = appEngine.getDocumentInput().getLevelsAgreement().length;
 
         if (countForm == 0 && currentStep < maxStep) {
-            LevelAgreement level = appEngine.getDocumentInput().getLevelsAgreement()[currentStep];
+            LevelAgreementIn level = appEngine.getDocumentInput().getLevelsAgreement()[currentStep];
             for (int k = 0; k < level.getUsers().length; k++) {
                 createVoteDialog(String.valueOf(level.getStep()), level.getUsers()[k]);
             }

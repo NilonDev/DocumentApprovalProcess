@@ -1,15 +1,13 @@
 package com.example.docprocess.model;
 
-import java.util.Map;
-
 /**
  * LevelAgreement - уровень согласования документа
- *
+ * <p>
  * step - шаг/уровень согласования
  * operation - операция для 2+ пользователей (and, or)
- * userVoting - пользователи и их голос (user1 : "yes"; user2 : "no")
+ * userVoting - пользователи и их голос (user1 : "true"; user2 : "false")
  */
-public class LevelAgreement {
+public class LevelAgreementIn {
     private int step;
     private String operation;
     private String[] users;
@@ -17,6 +15,7 @@ public class LevelAgreement {
     public int getStep() {
         return step;
     }
+
     public String getOperation() {
         return operation;
     }
