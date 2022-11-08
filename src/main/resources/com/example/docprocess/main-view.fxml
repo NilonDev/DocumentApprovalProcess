@@ -12,7 +12,7 @@
                 <Button fx:id="openBtn" layoutX="14.0" layoutY="230.0" mnemonicParsing="false" onAction="#openJsonFile" prefHeight="30.0" prefWidth="170.0" text="Загрузить файл" />
                 <Button fx:id="processingBtn" disable="true" layoutX="15.0" layoutY="278.0" mnemonicParsing="false" onAction="#processingJsonFile" prefHeight="30.0" prefWidth="170.0" text="Обработать файл" />
                 <Button fx:id="saveBtn" disable="true" layoutX="15.0" layoutY="322.0" mnemonicParsing="false" onAction="#saveJsonFile" prefHeight="30.0" prefWidth="170.0" text="Сохранить файл" />
-                <Button fx:id="exitBtn" layoutX="14.0" layoutY="553.0" mnemonicParsing="false" onAction="#exitProgram" prefHeight="25.0" prefWidth="171.0" text="Выход" />
+                <Button fx:id="exitBtn" layoutX="13.0" layoutY="547.0" mnemonicParsing="false" onAction="#exitProgram" prefHeight="25.0" prefWidth="171.0" text="Выход" />
                 <ImageView fitHeight="115.0" fitWidth="171.0" layoutX="15.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@icon.jpg" />
@@ -28,7 +28,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
-                    <MenuItem fx:id="aboutProgram" onAction="#createAboutForm" mnemonicParsing="false" text="About" />
+                    <MenuItem fx:id="aboutProgram" mnemonicParsing="false" onAction="#createAboutForm" text="About" />
                   </items>
                 </Menu>
               </menus>

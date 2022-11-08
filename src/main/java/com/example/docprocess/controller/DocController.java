@@ -66,8 +66,10 @@ public class DocController implements VoteDialogController.Callback {
 
     @FXML
     protected void processingJsonFile() throws IOException {
-            appEngine.processingDocument(userVoteResult);
-            loadSuccess();
+        appEngine.processingDocument(userVoteResult);
+        loadSuccess();
+        // вывод финального окна
+        createResultForm(appEngine.getFinalResult());
     }
 
     @FXML
@@ -85,7 +87,7 @@ public class DocController implements VoteDialogController.Callback {
             appEngine.jsonSave(selectedFile.getAbsolutePath());
             loadSuccess();
         } else {
-           // loadError();
+            // loadError();
         }
     }
 
@@ -170,6 +172,7 @@ public class DocController implements VoteDialogController.Callback {
     private int countForm = 0;
     private int currentStep = 0;
     private Map<String, String> userVoteResult = new HashMap<>();
+
     public Map<String, String> getUserVoteResult() {
         return userVoteResult;
     }
@@ -186,7 +189,8 @@ public class DocController implements VoteDialogController.Callback {
 
     /**
      * createVoteDialog() - Создание окна согласования
-     * @param step = текуший шаг, на котором проходит согласование
+     *
+     * @param step     = текуший шаг, на котором проходит согласование
      * @param userName = имя голосующего пользователя
      */
     @FXML
@@ -249,6 +253,7 @@ public class DocController implements VoteDialogController.Callback {
         userVoteResult.put(userName, userVote);     // добавление результата в коллекцию
         nextVote();                                  // переход к следующему шагу согласования
     }
+
     @FXML
     protected void createAboutForm() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("about-view.fxml"));
@@ -256,6 +261,25 @@ public class DocController implements VoteDialogController.Callback {
         Stage stage = new Stage();
         stage.setTitle("О программе");
         stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    protected void createResultForm(String resultVote) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("result-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Результаты");
+        stage.setScene(scene);
+
+        ResultDialogController resultController = (ResultDialogController) fxmlLoader.getController();
+        if (resultVote.toLowerCase().equals("true")) {
+            setSuccessImg(resultController.imageResult);
+            resultController.resultLabel.setText("TRUE");
+        } else if (resultVote.toLowerCase().equals("false")) {
+            setErrorImg(resultController.imageResult);
+            resultController.resultLabel.setText("FALSE");
+        }
         stage.show();
     }
 }

@@ -9,9 +9,10 @@
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <ImageView fitHeight="298.0" fitWidth="537.0" layoutX="35.0" layoutY="51.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="298.0" fitWidth="537.0" layoutX="85.0" layoutY="51.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@about.jpg" />
+                  <Image url="@icon.jpg" />
+                  <!--  <Image url="@about.jpg" /> -->
                </image>
             </ImageView>
             <Label layoutX="193.0" layoutY="14.0" text="Версия программы 0.0.1">

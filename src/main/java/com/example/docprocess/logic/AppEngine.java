@@ -52,6 +52,12 @@ public class AppEngine {
         writer.close();
     }
 
+    public String getFinalResult() {
+        if (documentOutput == null) return "";
+        List<LevelAgreementOut> lAOut = documentOutput.getLevelsAgreement();
+        return lAOut.get(lAOut.size() - 1).getVoteResult();
+    }
+
 
     public void processingDocument(Map<String, String> voteResult) throws IOException {
         /*
